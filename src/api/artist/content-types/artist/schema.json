@@ -1,0 +1,50 @@
+{
+    "kind": "collectionType",
+    "collectionName": "artists",
+    "info": {
+    "singularName": "artist",
+    "pluralName": "artists",
+    "displayName": "Artist",
+    "description": "Music artists and producers"
+    },
+    "options": {
+    "draftAndPublish": true
+    },
+    "attributes": {
+    "name": {
+        "type": "string",
+        "required": true
+    },
+    "bio": {
+        "type": "text"
+    },
+    "profileImage": {
+        "type": "media",
+        "multiple": false,
+        "allowedTypes": [
+        "images"
+        ]
+    },
+    "socialLinks": {
+        "type": "json"
+    },
+    "tracks": {
+        "type": "relation",
+        "relation": "oneToMany",
+        "target": "api::track.track",
+        "mappedBy": "artist"
+    },
+    "user": {
+        "type": "relation",
+        "relation": "oneToOne",
+        "target": "plugin::users-permissions.user"
+    }
+    },
+    "artist": {
+    "type": "relation",
+    "relation": "oneToOne",
+    "target": "api::artist.artist",
+    "mappedBy": "user"
+    }
+
+}
