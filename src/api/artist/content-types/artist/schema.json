@@ -1,50 +1,38 @@
 {
-    "kind": "collectionType",
-    "collectionName": "artists",
-    "info": {
+  "kind": "collectionType",
+  "collectionName": "artists",
+  "info": {
     "singularName": "artist",
     "pluralName": "artists",
     "displayName": "Artist",
     "description": "Music artists and producers"
-    },
-    "options": {
+  },
+  "options": {
     "draftAndPublish": true
-    },
-    "attributes": {
+  },
+  "pluginOptions": {},
+  "attributes": {
     "name": {
-        "type": "string",
-        "required": true
+      "type": "string",
+      "required": true
     },
     "bio": {
-        "type": "text"
+      "type": "text"
     },
     "profileImage": {
-        "type": "media",
-        "multiple": false,
-        "allowedTypes": [
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": [
         "images"
-        ]
+      ]
     },
     "socialLinks": {
-        "type": "json"
-    },
-    "tracks": {
-        "type": "relation",
-        "relation": "oneToMany",
-        "target": "api::track.track",
-        "mappedBy": "artist"
+      "type": "json"
     },
     "user": {
-        "type": "relation",
-        "relation": "oneToOne",
-        "target": "plugin::users-permissions.user"
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "plugin::users-permissions.user"
     }
-    },
-    "artist": {
-    "type": "relation",
-    "relation": "oneToOne",
-    "target": "api::artist.artist",
-    "mappedBy": "user"
-    }
-
+  }
 }

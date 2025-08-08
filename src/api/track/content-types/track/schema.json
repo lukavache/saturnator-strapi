@@ -4,12 +4,12 @@
   "info": {
     "singularName": "track",
     "pluralName": "tracks",
-    "displayName": "Track",
-    "description": "Music tracks and samples"
+    "displayName": "Track"
   },
   "options": {
     "draftAndPublish": true
   },
+  "pluginOptions": {},
   "attributes": {
     "title": {
       "type": "string",
@@ -22,12 +22,30 @@
       "type": "integer",
       "required": true
     },
+    "key": {
+      "type": "string",
+      "default": "C3",
+      "required": true
+    },
+    "genres": {
+      "type": "json",
+      "required": true
+    },
     "audioFile": {
       "type": "media",
       "multiple": false,
       "required": true,
       "allowedTypes": [
-        "audio"
+        "files",
+        "audios"
+      ]
+    },
+    "samples": {
+      "type": "media",
+      "multiple": true,
+      "allowedTypes": [
+        "files",
+        "audios"
       ]
     },
     "coverImage": {
@@ -35,38 +53,26 @@
       "multiple": false,
       "required": true,
       "allowedTypes": [
-        "images"
+        "images",
+        "files"
       ]
     },
-    "trackType": {
+    "trackStatus": {
       "type": "enumeration",
-      "enum": [
-        "sample",
-        "track",
-        "album"
-      ],
-      "required": true
-    },
-    "status": {
-      "type": "enumeration",
+      "required": true,
       "enum": [
         "pending",
         "approved",
         "rejected"
-      ],
-      "default": "pending",
-      "required": true
+      ]
     },
-    "artist": {
+    "username": {
+      "type": "string"
+    },
+    "users_permissions_user": {
       "type": "relation",
       "relation": "manyToOne",
-      "target": "api::artist.artist",
-      "inversedBy": "tracks"
-    },
-    "genres": {
-      "type": "relation",
-      "relation": "manyToMany",
-      "target": "api::genre.genre",
+      "target": "plugin::users-permissions.user",
       "inversedBy": "tracks"
     }
   }

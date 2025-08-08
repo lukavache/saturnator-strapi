@@ -399,7 +399,6 @@ export interface ApiArtistArtist extends Struct.CollectionTypeSchema {
     profileImage: Schema.Attribute.Media<'images'>;
     publishedAt: Schema.Attribute.DateTime;
     socialLinks: Schema.Attribute.JSON;
-    tracks: Schema.Attribute.Relation<'oneToMany', 'api::track.track'>;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -410,69 +409,9 @@ export interface ApiArtistArtist extends Struct.CollectionTypeSchema {
   };
 }
 
-export interface ApiGenreGenre extends Struct.CollectionTypeSchema {
-  collectionName: 'genres';
-  info: {
-    description: 'Music genres and categories';
-    displayName: 'Genre';
-    pluralName: 'genres';
-    singularName: 'genre';
-  };
-  options: {
-    draftAndPublish: true;
-  };
-  attributes: {
-    createdAt: Schema.Attribute.DateTime;
-    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
-      Schema.Attribute.Private;
-    description: Schema.Attribute.Text;
-    locale: Schema.Attribute.String & Schema.Attribute.Private;
-    localizations: Schema.Attribute.Relation<'oneToMany', 'api::genre.genre'> &
-      Schema.Attribute.Private;
-    name: Schema.Attribute.String &
-      Schema.Attribute.Required &
-      Schema.Attribute.Unique;
-    publishedAt: Schema.Attribute.DateTime;
-    tracks: Schema.Attribute.Relation<'manyToMany', 'api::track.track'>;
-    updatedAt: Schema.Attribute.DateTime;
-    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
-      Schema.Attribute.Private;
-  };
-}
-
-export interface ApiHomePageHomePage extends Struct.SingleTypeSchema {
-  collectionName: 'home_pages';
-  info: {
-    displayName: 'Home Page';
-    pluralName: 'home-pages';
-    singularName: 'home-page';
-  };
-  options: {
-    draftAndPublish: true;
-  };
-  attributes: {
-    createdAt: Schema.Attribute.DateTime;
-    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
-      Schema.Attribute.Private;
-    Description: Schema.Attribute.Text;
-    locale: Schema.Attribute.String & Schema.Attribute.Private;
-    localizations: Schema.Attribute.Relation<
-      'oneToMany',
-      'api::home-page.home-page'
-    > &
-      Schema.Attribute.Private;
-    publishedAt: Schema.Attribute.DateTime;
-    Title: Schema.Attribute.String;
-    updatedAt: Schema.Attribute.DateTime;
-    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
-      Schema.Attribute.Private;
-  };
-}
-
 export interface ApiTrackTrack extends Struct.CollectionTypeSchema {
   collectionName: 'tracks';
   info: {
-    description: 'Music tracks and samples';
     displayName: 'Track';
     pluralName: 'tracks';
     singularName: 'track';
@@ -481,28 +420,37 @@ export interface ApiTrackTrack extends Struct.CollectionTypeSchema {
     draftAndPublish: true;
   };
   attributes: {
-    artist: Schema.Attribute.Relation<'manyToOne', 'api::artist.artist'>;
-    audioFile: Schema.Attribute.Media<'audio'> & Schema.Attribute.Required;
+    audioFile: Schema.Attribute.Media<'files' | 'audios'> &
+      Schema.Attribute.Required;
     bpm: Schema.Attribute.Integer & Schema.Attribute.Required;
-    coverImage: Schema.Attribute.Media<'images'> & Schema.Attribute.Required;
+    coverImage: Schema.Attribute.Media<'images' | 'files'> &
+      Schema.Attribute.Required;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
     description: Schema.Attribute.Text;
-    genres: Schema.Attribute.Relation<'manyToMany', 'api::genre.genre'>;
+    genres: Schema.Attribute.JSON & Schema.Attribute.Required;
+    key: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.DefaultTo<'C3'>;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<'oneToMany', 'api::track.track'> &
       Schema.Attribute.Private;
     publishedAt: Schema.Attribute.DateTime;
-    status: Schema.Attribute.Enumeration<['pending', 'approved', 'rejected']> &
-      Schema.Attribute.Required &
-      Schema.Attribute.DefaultTo<'pending'>;
+    samples: Schema.Attribute.Media<'files' | 'audios', true>;
     title: Schema.Attribute.String & Schema.Attribute.Required;
-    trackType: Schema.Attribute.Enumeration<['sample', 'track', 'album']> &
+    trackStatus: Schema.Attribute.Enumeration<
+      ['pending', 'approved', 'rejected']
+    > &
       Schema.Attribute.Required;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
+    username: Schema.Attribute.String;
+    users_permissions_user: Schema.Attribute.Relation<
+      'manyToOne',
+      'plugin::users-permissions.user'
+    >;
   };
 }
 
@@ -992,6 +940,7 @@ export interface PluginUsersPermissionsUser
       'manyToOne',
       'plugin::users-permissions.role'
     >;
+    tracks: Schema.Attribute.Relation<'oneToMany', 'api::track.track'>;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -1014,8 +963,6 @@ declare module '@strapi/strapi' {
       'admin::transfer-token-permission': AdminTransferTokenPermission;
       'admin::user': AdminUser;
       'api::artist.artist': ApiArtistArtist;
-      'api::genre.genre': ApiGenreGenre;
-      'api::home-page.home-page': ApiHomePageHomePage;
       'api::track.track': ApiTrackTrack;
       'plugin::content-releases.release': PluginContentReleasesRelease;
       'plugin::content-releases.release-action': PluginContentReleasesReleaseAction;
