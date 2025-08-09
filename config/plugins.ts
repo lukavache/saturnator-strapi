@@ -45,7 +45,7 @@ export default ({ env }) => ({
   upload: {
     config: {
       provider: 'local',
-      sizeLimit: 100000, // 100MB limit - moved from providerOptions
+      sizeLimit: 1000000,
     },
   },
 });
