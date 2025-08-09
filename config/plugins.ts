@@ -44,10 +44,8 @@ export default ({ env }) => ({
   },
   upload: {
     config: {
-      provider: 'local', // Change from 'aws-s3' to 'local'
-      providerOptions: {
-        sizeLimit: 1000000, // 100MB limit
-      },
+      provider: 'local',
+      sizeLimit: 100000, // 100MB limit - moved from providerOptions
     },
   },
 });
